@@ -41,8 +41,9 @@ public class DBQueue extends Observable
     }
 
 
-    public Object poll() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public MessageObj poll() 
+    {
+        return db.getPendingMessage();
     }
 
     
@@ -51,10 +52,19 @@ public class DBQueue extends Observable
     
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    
 
 
+    
+    public void completedTask(String id)
+    {
+        db.removeMessage(id);
+    }
+    
+    
+    
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     public int size() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -68,21 +78,7 @@ public class DBQueue extends Observable
         throw new UnsupportedOperationException("Not supported yet.");
     }
    
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void clear() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
-    public void completedTask(String id)
-    {
-        db.removeMessage(id);
-    }
-
-    public boolean add(Object e) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    
     
 }

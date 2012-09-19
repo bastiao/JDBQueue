@@ -24,7 +24,7 @@ package org.koplabs.dbqueue;
  */
 public interface IDBManager 
 {
-    public String getPendingMessage();
+    public MessageObj getPendingMessage();
     public void removeMessage(final String id);
     public String addMessage(String message);
 }

@@ -169,19 +169,20 @@ public class SQLiteDBManager implements IDBManager
         });
     }
 
-    public String getPendingMessage() {
+    public MessageObj getPendingMessage() {
      
-        String result = queue.execute(new SQLiteJob<String >() 
+        MessageObj result = queue.execute(new SQLiteJob<MessageObj >() 
         {
 
-            protected String  job(SQLiteConnection db) throws SQLiteException {
+            protected MessageObj  job(SQLiteConnection db) throws SQLiteException {
                 List<String> result = new ArrayList<String>();
+                String id = "";
 
                 try {
                     SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
                             + "WHERE status = 'PENDING' LIMIT 1");
                     st.step();
-                    int id = st.columnInt(0);
+                    id = st.columnString(0);
                     result.add(st.columnString(2));
                     st.dispose();
                     
@@ -197,8 +198,10 @@ public class SQLiteDBManager implements IDBManager
                 } catch (SQLiteException ex) {
                     Logger.getLogger(SQLiteDBManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                return result.get(0);
+                MessageObj msg = new MessageObj();
+                msg.setId(id);
+                msg.setMsg(result.get(0));
+                return msg;
             }
         }).complete();
         
