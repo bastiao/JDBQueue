@@ -4,7 +4,7 @@ The basic idea of JDBQueue is to have a persistence Queue. Then, if the program 
 We use a database because serialize a Queue objet is not faster, for each insertion.
 
 
-# Notes # 
+# Notes #
 
 This work is still working in progress and used by a project. Generalization might be necessary to other cases. Feel free to contribute back to it.
 
