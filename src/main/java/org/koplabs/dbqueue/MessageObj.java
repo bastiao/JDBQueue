@@ -19,13 +19,39 @@
 package org.koplabs.dbqueue;
 
 /**
- * 
+ *
  * @author Luís A. Bastião Silva <luis.kop@gmail.com>
  */
-public interface IDBManager 
+public class MessageObj 
 {
-    public String getPendingMessage();
-    public void removeMessage(final String id);
-    public String addMessage(String message);
+    private String id;
+    private String msg;
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the msg
+     */
+    public String getMsg() {
+        return msg;
+    }
+
+    /**
+     * @param msg the msg to set
+     */
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 }
-    

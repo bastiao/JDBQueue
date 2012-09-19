@@ -18,41 +18,43 @@
 
 package org.koplabs.dbqueue;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
+import java.util.List;
+import java.util.Observable;
 
 /**
  *
  * @author Luís A. Bastião Silva <luis.kop@gmail.com>
  */
-public class DBQueue implements Queue
+public class DBQueue extends Observable 
 {
-
-    public boolean add(Object e) 
+    private IDBManager db = null;
+    
+    public DBQueue()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        db = SQLiteDBManager.getInstance();
     }
 
-    public boolean offer(Object e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String add(String e) 
+    {
+        db.addMessage(e);
+        return "";
     }
 
-    public Object remove() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     public Object poll() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Object element() {
+    
+    public List<MessageObj> getAllProgressTask()
+    {
+    
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    
 
-    public Object peek() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+
 
     public int size() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -65,40 +67,21 @@ public class DBQueue implements Queue
     public boolean contains(Object o) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    public Iterator iterator() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Object[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Object[] toArray(Object[] a) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+   
     public boolean remove(Object o) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean containsAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean addAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean removeAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public boolean retainAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     public void clear() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void completedTask(String id)
+    {
+        db.removeMessage(id);
+    }
+
+    public boolean add(Object e) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

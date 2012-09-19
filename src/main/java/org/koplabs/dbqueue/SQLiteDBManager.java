@@ -98,13 +98,13 @@ public class SQLiteDBManager implements IDBManager
 
     }
     
-    public void addMessage(final String message)
-    {
-        queue.execute(new SQLiteJob<Object>() 
+    public String addMessage(final String message) {
+     
+        String result = queue.execute(new SQLiteJob<String >() 
         {
 
-            protected Object job(SQLiteConnection db) throws SQLiteException 
-            {
+            protected String  job(SQLiteConnection db) throws SQLiteException {
+                String result2 = "";
                 try {
                     
                     SQLiteStatement st = db.prepare("INSERT INTO ServicePool"
@@ -114,6 +114,16 @@ public class SQLiteDBManager implements IDBManager
                         st.bind(1, "PENDING");
                         st.bind(2, message);
                         st.step();
+                        
+                        SQLiteStatement st2 = db.prepare("SELECT * FROM ServicePool "
+                            + " LIMIT 1 ORDER BY IDService DESC");
+                        st2.step();
+                        result2= st2.columnString(0);
+                        
+                        st2.dispose();
+                        
+                        
+                        
                     } finally {
                         st.dispose();
                     }
@@ -122,12 +132,13 @@ public class SQLiteDBManager implements IDBManager
                     ex.printStackTrace();
                 }
 
-                return null;
+                return result2;
             }
-        });
+        }).complete();
         
+        return result;
     }
-
+    
     public void removeMessage(final String id)
     {
         queue.execute(new SQLiteJob<Object>() 
