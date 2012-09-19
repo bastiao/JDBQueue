@@ -28,8 +28,6 @@ import java.util.Queue;
  */
 public class DBQueue implements Queue
 {
-    
-    
 
     public boolean add(Object e) 
     {

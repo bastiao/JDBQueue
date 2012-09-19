@@ -15,28 +15,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with PACScloud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.koplabs.dbqueue.worker;
 
-import org.koplabs.dbqueue.ITask;
+package org.koplabs.dbqueue;
 
 /**
- *
- * @author bastiao
+ * 
+ * @author Luís A. Bastião Silva <luis.kop@gmail.com>
  */
-public class JDBWorker extends Thread
+public interface IDBManager 
 {
-    
-    public JDBWorker(ITask handler)
-    {
-    
-    }
-    
-    @Override
-    public void run()
-    {
-    
-        
-        
-    }
-    
+    public String getPendingMessage();
+    public void removeMessage(final String id);
+    public void addMessage(String message);
 }
+    
