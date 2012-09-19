@@ -19,8 +19,6 @@ Luís A. Bastião Silva <luis.kop@gmail.com>
 
 Copyright   2012 - Luís A. Bastião Silva
 
-This file is part of JDBQueue.
-
 JDBQueue is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
