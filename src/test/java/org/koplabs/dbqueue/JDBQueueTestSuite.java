@@ -17,10 +17,36 @@
  */
 package org.koplabs.dbqueue;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
 /**
  *
- * @author bastiao
+ * @author Luís A. Bastião Silva <luis.kop@gmail.com>
  */
-public class DBQueue {
+@RunWith(Suite.class)
+@Suite.SuiteClasses({org.koplabs.dbqueue.DBJUnitTest.class, 
+    org.koplabs.dbqueue.DBQueueJUnitTest.class})
+public class JDBQueueTestSuite {
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
     
 }
