@@ -24,5 +24,5 @@ package org.koplabs.dbqueue;
  */
 public interface ITask 
 {
-    public void handlerMessage(String message);
+    public void handlerMessage(MessageObj message);
 }

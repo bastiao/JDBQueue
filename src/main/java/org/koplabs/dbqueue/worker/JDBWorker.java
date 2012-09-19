@@ -17,26 +17,57 @@
  */
 package org.koplabs.dbqueue.worker;
 
+import java.util.Observable;
+import java.util.Observer;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.koplabs.dbqueue.ITask;
+import org.koplabs.dbqueue.MessageObj;
 
 /**
  *
  * @author bastiao
  */
-public class JDBWorker extends Thread
+public class JDBWorker extends Thread implements Observer
 {
     
+    private BlockingQueue<MessageObj> queue = new LinkedBlockingQueue<MessageObj>();
+    
+    private boolean askToDie = false;
+    private ITask handler = null;
     public JDBWorker(ITask handler)
     {
-    
+        this.handler = handler;
     }
     
     @Override
     public void run()
     {
+        while(!askToDie)
+        {
+            MessageObj msg = null;
+            try {
+                msg = this.queue.take();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JDBWorker.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.handler.handlerMessage(msg);
+        }
+        
+    }
     
+    public void close()
+    {
+        this.askToDie = true;
+    }
+
+    public void update(Observable o, Object arg) 
+    {
         
-        
+        MessageObj obj = (MessageObj) arg;
+        queue.add(obj);
     }
     
 }
