@@ -20,6 +20,8 @@ package org.koplabs.dbqueue;
 
 import java.util.List;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,6 +31,7 @@ public class DBQueue extends Observable
 {
     private IDBManager db = null;
     private String fileName = "queue.db";
+    private Object monitorWaitingForNew = new Object();
     
     public DBQueue(String fileName)
     {
@@ -39,6 +42,11 @@ public class DBQueue extends Observable
     public String add(String e) 
     {
         db.addMessage(e);
+        synchronized(monitorWaitingForNew)
+        {
+            monitorWaitingForNew.notifyAll();
+        }
+        
         return "";
     }
 
@@ -47,6 +55,27 @@ public class DBQueue extends Observable
     {
         return db.getPendingMessage();
     }
+    
+    
+    
+    public MessageObj take() 
+    {
+        MessageObj r = null;
+        while((r=db.getPendingMessage())==null)
+        {
+            synchronized(monitorWaitingForNew)
+            {
+                try {
+                    monitorWaitingForNew.wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(DBQueue.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        }
+        return r;
+    }
+    
 
     
     public List<MessageObj> getAllProgressTask()

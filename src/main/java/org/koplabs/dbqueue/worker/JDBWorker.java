@@ -23,6 +23,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.koplabs.dbqueue.DBQueue;
 import org.koplabs.dbqueue.ITask;
 import org.koplabs.dbqueue.MessageObj;
 
@@ -33,13 +34,14 @@ import org.koplabs.dbqueue.MessageObj;
 public class JDBWorker extends Thread implements Observer
 {
     
-    private BlockingQueue<MessageObj> queue = new LinkedBlockingQueue<MessageObj>();
+    private DBQueue queue = null;
     
     private boolean askToDie = false;
     private ITask handler = null;
-    public JDBWorker(ITask handler)
+    public JDBWorker(DBQueue queue, ITask handler)
     {
         this.handler = handler;
+        this.queue = queue;
     }
     
     @Override
@@ -48,11 +50,9 @@ public class JDBWorker extends Thread implements Observer
         while(!askToDie)
         {
             MessageObj msg = null;
-            try {
-                msg = this.queue.take();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JDBWorker.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
+            msg = this.queue.take();
+            
             this.handler.handlerMessage(msg);
         }
         
@@ -63,11 +63,8 @@ public class JDBWorker extends Thread implements Observer
         this.askToDie = true;
     }
 
-    public void update(Observable o, Object arg) 
-    {
-        
-        MessageObj obj = (MessageObj) arg;
-        queue.add(obj);
+    public void update(Observable o, Object o1) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
