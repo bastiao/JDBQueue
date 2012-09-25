@@ -23,8 +23,11 @@ import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 /**
- *
+ * DBQueue is a persistence queue. The ideia is to avoid that requests 
+ * are lost when a program crash. 
+ * 
  * @author Luís A. Bastião Silva <luis.kop@gmail.com>
  */
 public class DBQueue
@@ -39,6 +42,12 @@ public class DBQueue
         db = new SQLiteDBManager(fileName);
     }
 
+    /**
+     * Add new message to the Queue
+     * 
+     * @param e Message
+     * @return nothing for now
+     */
     public String add(String e) 
     {
         db.addMessage(e);
@@ -50,14 +59,21 @@ public class DBQueue
         return "";
     }
 
-
+    /**
+     * Poll a message
+     * @return returns a message. if no message in the queue null is returned
+     */
     public MessageObj poll() 
     {
         return db.getPendingMessage();
     }
     
     
-    
+    /**
+     * Blocking poll message from the queue. 
+     * @return returns the message. If the queue does not have message, it blocks
+     * waiting for new messages.
+     */
     public MessageObj take() 
     {
         MessageObj r = null;
@@ -85,7 +101,10 @@ public class DBQueue
     }
 
 
-    
+    /**
+     * Completes a task.
+     * @param id 
+     */
     public void completedTask(String id)
     {
         db.removeMessage(id);
