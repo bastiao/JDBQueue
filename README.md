@@ -11,7 +11,7 @@ There is a third-party state, that it is when the message are handled and it is
 completed. The work do completeTask and the message are removed from the 
 DBQueue (persistence queue). 
 
-# Example # 
+# Example #
 
 In order to handle the message an implementation of ITask should be provided.
 Moreover, to poll the messages automatically, a JDBWorker need to be created.
