@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author Luís A. Bastião Silva <luis.kop@gmail.com>
  */
-public class DBQueue extends Observable 
+public class DBQueue
 {
     private IDBManager db = null;
     private String fileName = "queue.db";

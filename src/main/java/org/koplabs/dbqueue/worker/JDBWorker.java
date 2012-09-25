@@ -31,7 +31,7 @@ import org.koplabs.dbqueue.MessageObj;
  *
  * @author bastiao
  */
-public class JDBWorker extends Thread implements Observer
+public class JDBWorker extends Thread
 {
     
     private DBQueue queue = null;
