@@ -30,6 +30,10 @@ Moreover, to poll the messages automatically, a JDBWorker need to be created.
 
 
 
+# Dependence #
+
+In order to grant the persistence, JDBQueue uses sqlite4java.
+
 # Notes #
 
 This work is still working in progress and used by a project. Generalization might be necessary to other cases. Feel free to contribute back to it.
