@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>JDBQueue by bastiao</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>JDBQueue</h1>
+        <p>Java Persistence Queue</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/bastiao/JDBQueue" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/bastiao/JDBQueue/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/bastiao/JDBQueue/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Introduction</h1>
+
+<p>The basic idea of JDBQueue is to have a persistence Queue. Then, if the program need to restart, the queue is restored.
+We use a database because serialize a Queue objet is not faster, for each insertion.</p>
+
+<p>This messages in the queue has 2 states:</p>
+
+<ul>
+<li>PENDING: It waits for a worker poll the message. </li>
+<li>PROGRESS: A worker is trying to work on the message. </li>
+</ul><p>There is a third-party state, that it is when the message are handled and it is 
+completed. The work do completeTask and the message are removed from the 
+DBQueue (persistence queue). </p>
+
+<h1>Example</h1>
+
+<p>In order to handle the message an implementation of ITask should be provided.
+Moreover, to poll the messages automatically, a JDBWorker need to be created.</p>
+
+<pre><code>DBQueue q = new DBQueue("queue.db");
+JDBWorker worker = new JDBWorker(q,new TestTask());
+worker.start();
+
+q.add("Test");
+q.add("Test2");
+q.poll();
+q.take();
+
+worker.join();
+</code></pre>
+
+<h1>Dependence</h1>
+
+<p>In order to grant the persistence, JDBQueue uses sqlite4java.</p>
+
+<h1>Notes</h1>
+
+<p>This work is still working in progress and used by a project. Generalization might be necessary to other cases. Feel free to contribute back to it.</p>
+
+<h1>Author</h1>
+
+<p>Luís A. Bastião Silva <a href="mailto:luis.kop@gmail.com">luis.kop@gmail.com</a></p>
+
+<h1>Licence</h1>
+
+<p>Copyright   2012 - Luís A. Bastião Silva</p>
+
+<p>JDBQueue is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+
+<p>JDBQueue is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+
+<p>You should have received a copy of the GNU General Public License
+along with JDBQueue.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/bastiao">bastiao</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
