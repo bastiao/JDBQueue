@@ -28,10 +28,12 @@ import java.util.Observable;
 public class DBQueue extends Observable 
 {
     private IDBManager db = null;
+    private String fileName = "queue.db";
     
-    public DBQueue()
+    public DBQueue(String fileName)
     {
-        db = SQLiteDBManager.getInstance();
+        this.fileName=  fileName;
+        db = new SQLiteDBManager(fileName);
     }
 
     public String add(String e) 

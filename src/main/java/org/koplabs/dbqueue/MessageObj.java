@@ -54,4 +54,10 @@ public class MessageObj
     public void setMsg(String msg) {
         this.msg = msg;
     }
+    public String toString()
+    {
+        String result = "" ; 
+        result = "Msg id: " + this.id + "\nMsg: "+ this.msg ;
+        return result;
+    }
 }

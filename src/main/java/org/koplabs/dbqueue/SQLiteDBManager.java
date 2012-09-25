@@ -46,22 +46,12 @@ public class SQLiteDBManager implements IDBManager
     
     
     
-    private static SQLiteDBManager instance;
-    
 
-    public static synchronized IDBManager getInstance() {
-        if (instance == null) {
-            instance = new SQLiteDBManager();
-        }
-
-        return instance;
-    }
-
-    private SQLiteDBManager() 
+    public SQLiteDBManager(String filename) 
     {
 
-        
-        File dbFile = new File(filename);
+        this.filename = filename;
+        File dbFile = new File(this.filename);
 
         Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
 
@@ -116,7 +106,7 @@ public class SQLiteDBManager implements IDBManager
                         st.step();
                         
                         SQLiteStatement st2 = db.prepare("SELECT * FROM ServicePool "
-                            + " LIMIT 1 ORDER BY IDService DESC");
+                            + "ORDER BY IDService DESC LIMIT 1");
                         st2.step();
                         result2= st2.columnString(0);
                         
@@ -209,12 +199,4 @@ public class SQLiteDBManager implements IDBManager
     }
     
     
-    public static void main(String [] args)
-    {
-        System.out.println("Adding");
-        SQLiteDBManager.getInstance().addMessage("test");
-        System.out.println("Get");
-        System.out.println(SQLiteDBManager.getInstance().getPendingMessage());
-    }
-
 }
