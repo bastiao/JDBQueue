@@ -3,6 +3,32 @@
 The basic idea of JDBQueue is to have a persistence Queue. Then, if the program need to restart, the queue is restored.
 We use a database because serialize a Queue objet is not faster, for each insertion.
 
+This messages in the queue has 2 states:
+- PENDING: It waits for a worker poll the message. 
+- PROGRESS: A worker is trying to work on the message. 
+
+There is a third-party state, that it is when the message are handled and it is 
+completed. The work do completeTask and the message are removed from the 
+DBQueue (persistence queue). 
+
+# Example # 
+
+In order to handle the message an implementation of ITask should be provided.
+Moreover, to poll the messages automatically, a JDBWorker need to be created.
+
+
+    > DBQueue q = new DBQueue("queue.db");
+    > JDBWorker worker = new JDBWorker(q,new TestTask());
+    > worker.start();
+
+    > q.add("Test");
+    > q.add("Test2");
+    > q.poll();
+    > q.take();
+
+    > worker.join();
+
+
 
 # Notes #
 
