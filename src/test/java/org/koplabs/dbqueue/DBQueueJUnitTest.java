@@ -17,6 +17,7 @@
  */
 package org.koplabs.dbqueue;
 
+import java.io.File;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -38,6 +39,9 @@ public class DBQueueJUnitTest {
     @AfterClass
     public static void tearDownClass() throws Exception 
     {
+        
+        File f = new File("queue.db");
+        f.delete();
     }
     
     @Before
@@ -53,7 +57,31 @@ public class DBQueueJUnitTest {
     @Test
     public void testAdd()
     {
-    
+        DBQueue q = new DBQueue("queue.db");
+        q.add("ss");
+        
+        assertEquals("ss",q.poll().getMsg());
     }
+    
+    
+    
+    @Test
+    public void testMassiveAdd()
+    {
+        
+        DBQueue q = new DBQueue("queue.db");
+        for (int i = 0 ; i<1000; i++)
+        {
+            q.add("ss");
+        }
+        for (int i = 0 ; i<1000; i++)
+        {
+            assertEquals("ss",q.poll().getMsg());
+        }
+        
+        
+    }
+    
+    
     
 }

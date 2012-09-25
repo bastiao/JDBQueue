@@ -19,14 +19,17 @@
 
 package org.koplabs.dbqueue;
 
+import java.io.File;
 import org.junit.*;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Luís A. Bastião Silva <luis.kop@gmail.com>
  */
 public class DBJUnitTest {
+    
+    
+    private SQLiteDBManager db = null;
     
     public DBJUnitTest() {
     }
@@ -41,27 +44,31 @@ public class DBJUnitTest {
     
     @Before
     public void setUp() {
+        db = new SQLiteDBManager("queue.db");
     }
     
     @After
-    public void tearDown() {
+    public void tearDown() 
+    {
+        db = null;
+        File f = new File("queue.db");
+        f.delete();
     }
-    
     
     @Test
     public void testInsert() {
         System.out.println("Adding");
-        SQLiteDBManager.getInstance().addMessage("test");
+        db.addMessage("test");
         System.out.println("Get");
-        SQLiteDBManager.getInstance().getPendingMessage();
+        db.getPendingMessage();
         
     }
     @Test
     public void testPoll() {
         System.out.println("Adding");
-        SQLiteDBManager.getInstance().addMessage("test");
+        db.addMessage("test");
         System.out.println("Get");
-        SQLiteDBManager.getInstance().getPendingMessage();
+        db.getPendingMessage();
         
     }
     
@@ -69,9 +76,9 @@ public class DBJUnitTest {
     public void testRemove()
     {
         System.out.println("Adding");
-        SQLiteDBManager.getInstance().addMessage("test");
+        db.addMessage("test");
         System.out.println("Get");
-        SQLiteDBManager.getInstance().getPendingMessage();
+        db.getPendingMessage();
         
     }
 
