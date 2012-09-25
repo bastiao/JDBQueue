@@ -47,13 +47,20 @@ public class WorkerTest {
     public void workerTest()
     {
     
-        
-        JDBWorker worker = new JDBWorker(new TestTask());
-        worker.start();
-        
         DBQueue q = new DBQueue("queue.db");
         
         
+        JDBWorker worker = new JDBWorker(q,new TestTask());
+        worker.start();
+        
+        for (int i = 0 ; i<1000 ; i++)
+        {
+            q.add("je1");
+            q.add("je2");
+            q.add("je3");
+            q.add("je4");
+            q.add("je5");
+        }
         worker.close();
         try {
             worker.join();
