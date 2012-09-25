@@ -17,16 +17,16 @@ In order to handle the message an implementation of ITask should be provided.
 Moreover, to poll the messages automatically, a JDBWorker need to be created.
 
 
-    > DBQueue q = new DBQueue("queue.db");
-    > JDBWorker worker = new JDBWorker(q,new TestTask());
-    > worker.start();
+    DBQueue q = new DBQueue("queue.db");
+    JDBWorker worker = new JDBWorker(q,new TestTask());
+    worker.start();
 
-    > q.add("Test");
-    > q.add("Test2");
-    > q.poll();
-    > q.take();
+    q.add("Test");
+    q.add("Test2");
+    q.poll();
+    q.take();
 
-    > worker.join();
+    worker.join();
 
 
 
