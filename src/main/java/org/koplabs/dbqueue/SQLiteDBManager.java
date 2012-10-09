@@ -88,6 +88,45 @@ public class SQLiteDBManager implements IDBManager
 
     }
     
+    
+    
+    public int size(final String status)
+    {
+    
+        Integer result = queue.execute(new SQLiteJob<Integer >() 
+        {
+
+            protected Integer  job(SQLiteConnection db) throws SQLiteException {
+                Integer result2 = 0;
+                try {
+                    
+                    SQLiteStatement st = db.prepare(
+                            "SELECT count(*) FROM ServicePool"
+                            + " WHERE status = '"+status+"' ");
+                    try
+                    {
+                       st.step();
+                       result2 = st.columnInt(0);
+                        
+                    } finally {
+                        st.dispose();
+                    }
+   
+                } catch (SQLiteException ex) {
+                    ex.printStackTrace();
+                }
+
+                return result2;
+            }
+        }).complete();
+        
+        return result;
+        
+        
+    }
+    
+    
+    
     public String addMessage(final String message) {
      
         String result = queue.execute(new SQLiteJob<String >() 
@@ -172,17 +211,19 @@ public class SQLiteDBManager implements IDBManager
                     SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
                             + "WHERE status = 'PENDING' LIMIT 1");
                     st.step();
-                    id = st.columnString(0);
-                    result.add(st.columnString(2));
-                    st.dispose();
-                    
+                    if (st.hasRow())
+                    {
+                        id = st.columnString(0);
+                        result.add(st.columnString(2));
+                        st.dispose();
+                    }
                     
                     SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PROGRESS' WHERE IDService=?");
+
                     st2.bind(1, id);
                     st2.step();
-                    
-                    st.dispose();
-                    
+                    st2.dispose();
+
                     
 
                 } catch (SQLiteException ex) {

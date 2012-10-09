@@ -38,11 +38,21 @@ public class JDBWorker extends Thread
     
     private boolean askToDie = false;
     private ITask handler = null;
+    private int numberOfMessages = Integer.MAX_VALUE;
+    
     public JDBWorker(DBQueue queue, ITask handler)
     {
         this.handler = handler;
         this.queue = queue;
     }
+    
+    
+    public JDBWorker(DBQueue queue, ITask handler, int numberOfMessages)
+    {
+        this(queue, handler);
+        this.numberOfMessages = numberOfMessages;
+    }
+    
     
     @Override
     public void run()
@@ -53,7 +63,14 @@ public class JDBWorker extends Thread
             
             msg = this.queue.take();
             
-            this.handler.handlerMessage(msg);
+            try
+            {
+                this.handler.handlerMessage(msg);
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
         
     }

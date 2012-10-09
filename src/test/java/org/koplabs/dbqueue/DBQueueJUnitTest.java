@@ -41,7 +41,7 @@ public class DBQueueJUnitTest {
     {
         
         File f = new File("queue.db");
-        f.delete();
+        //f.delete();
     }
     
     @Before

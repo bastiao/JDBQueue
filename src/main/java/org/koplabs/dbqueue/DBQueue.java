@@ -39,7 +39,7 @@ public class DBQueue
     public DBQueue(String fileName)
     {
         this.fileName=  fileName;
-        db = new SQLiteDBManager(fileName);
+        db = new SQLiteDBManager(this.fileName);
     }
 
     /**
@@ -81,6 +81,7 @@ public class DBQueue
         {
             synchronized(monitorWaitingForNew)
             {
+                System.out.println("Waiting");
                 try {
                     monitorWaitingForNew.wait();
                 } catch (InterruptedException ex) {
@@ -110,16 +111,29 @@ public class DBQueue
         db.removeMessage(id);
     }
     
-    
-    
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return db.size("PROGRESS") + db.size("PENDING");
     }
 
+    
+    
+    
+    public int sizePending() {
+        return db.size("PENDING");
+    }
+
+    
+    
+    public int sizeProgress() {
+        return db.size("PROGRESS");
+    }
+
+    
+    
     public boolean isEmpty() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

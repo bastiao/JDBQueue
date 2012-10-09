@@ -76,9 +76,15 @@ public class WorkerTest {
             q.add("je1");
             q.add("je2");
             q.add("je3");
+            System.out.println(q.size());
             q.add("je4");
             q.add("je5");
+            
         }
+        q.completedTask("1");
+        q.completedTask("2");
+        q.completedTask("3");
+        
         worker.close();
         try {
             worker.join();
