@@ -238,6 +238,41 @@ public class SQLiteDBManager implements IDBManager
         
         return result;
     }
+
+    public MessageObj getProgressMessage() {
+        
+        MessageObj result = queue.execute(new SQLiteJob<MessageObj >() 
+        {
+
+            protected MessageObj  job(SQLiteConnection db) throws SQLiteException {
+                List<String> result = new ArrayList<String>();
+                String id = "";
+
+                try {
+                    SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
+                            + "WHERE status = 'PROGRESS' LIMIT 1");
+                    st.step();
+                    if (st.hasRow())
+                    {
+                        id = st.columnString(0);
+                        result.add(st.columnString(2));
+                        st.dispose();
+                    }
+                    
+
+                } catch (SQLiteException ex) {
+                    Logger.getLogger(SQLiteDBManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                MessageObj msg = new MessageObj();
+                msg.setId(id);
+                msg.setMsg(result.get(0));
+                return msg;
+            }
+        }).complete();
+        
+        return result;
+        
+    }
     
     
 }

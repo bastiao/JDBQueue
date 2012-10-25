@@ -68,6 +68,17 @@ public class DBQueue
         return db.getPendingMessage();
     }
     
+    /**
+     * Poll a message
+     * @return returns a message. if no message in the queue null is returned
+     */
+    public MessageObj pollProgress() 
+    {
+        return db.getProgressMessage();
+    }
+    
+    
+    
     
     /**
      * Blocking poll message from the queue. 
@@ -81,7 +92,6 @@ public class DBQueue
         {
             synchronized(monitorWaitingForNew)
             {
-                System.out.println("Waiting");
                 try {
                     monitorWaitingForNew.wait();
                 } catch (InterruptedException ex) {
@@ -92,6 +102,9 @@ public class DBQueue
         }
         return r;
     }
+    
+    
+    
     
 
     
