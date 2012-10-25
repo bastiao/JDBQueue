@@ -71,7 +71,7 @@ public class JDBWorker extends Thread
             {
             }
             
-            while (queue.sizeProgress()>=numberOfMessages)
+            if (queue.sizeProgress()>=numberOfMessages)
             {
                 try {
                     Thread.sleep(300);

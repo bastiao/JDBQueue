@@ -249,8 +249,10 @@ public class SQLiteDBManager implements IDBManager
                 String id = "";
 
                 try {
+                    System.out.println("Status");
                     SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
                             + "WHERE status = 'PROGRESS' LIMIT 1");
+                    System.out.println("Status11");
                     st.step();
                     if (st.hasRow())
                     {
@@ -258,6 +260,7 @@ public class SQLiteDBManager implements IDBManager
                         result.add(st.columnString(2));
                         st.dispose();
                     }
+                    System.out.println("Status2");
                     
 
                 } catch (SQLiteException ex) {

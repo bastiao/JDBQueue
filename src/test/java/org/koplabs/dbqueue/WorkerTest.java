@@ -51,10 +51,15 @@ public class WorkerTest {
     
     class TestTask implements ITask
     {
-
+        private DBQueue queue; 
+        public TestTask(DBQueue queue )
+        {
+            this.queue = queue;
+        }
         public void handlerMessage(MessageObj message) {
             
             System.out.println(message);
+            queue.completedTask(message.getId());
             
         }
     
@@ -68,7 +73,7 @@ public class WorkerTest {
         DBQueue q = new DBQueue("queue.db");
         
         
-        JDBWorker worker = new JDBWorker(q,new TestTask());
+        JDBWorker worker = new JDBWorker(q,new TestTask(q), 2);
         worker.start();
         
         for (int i = 0 ; i<1000 ; i++)
@@ -76,14 +81,13 @@ public class WorkerTest {
             q.add("je1");
             q.add("je2");
             q.add("je3");
-            System.out.println(q.size());
+            System.out.println("Size: " + q.size());
+            System.out.println("Size of pending " + q.sizePending());
+            System.out.println("Size of progress " +q.sizeProgress());
             q.add("je4");
             q.add("je5");
             
         }
-        q.completedTask("1");
-        q.completedTask("2");
-        q.completedTask("3");
         
         worker.close();
         try {
