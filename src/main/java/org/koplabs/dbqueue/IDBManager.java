@@ -26,6 +26,7 @@ public interface IDBManager
 {
     public MessageObj getPendingMessage();
     public MessageObj getProgressMessage();
+    public void putEverythingPending() ;
     public void removeMessage(final String id);
     public String addMessage(String message);
     public int size(final String status);

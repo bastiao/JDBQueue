@@ -57,6 +57,9 @@ public class JDBWorker extends Thread
     @Override
     public void run()
     {
+        
+        queue.putEverythingPending();
+        
         while(!askToDie)
         {
             MessageObj msg = null;

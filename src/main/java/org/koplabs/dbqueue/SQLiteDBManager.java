@@ -197,6 +197,51 @@ public class SQLiteDBManager implements IDBManager
                 
         });
     }
+    
+    
+    
+    public void putEverythingPending() {
+     
+        MessageObj result = queue.execute(new SQLiteJob<MessageObj >() 
+        {
+
+            protected MessageObj  job(SQLiteConnection db) throws SQLiteException {
+                List<String> result = new ArrayList<String>();
+                String id = "";
+
+                try {
+                    SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
+                            + "WHERE status = 'PENDING' LIMIT 1");
+                    st.step();
+                    while (st.hasRow())
+                    {
+                        id = st.columnString(0);
+                        result.add(st.columnString(2));
+                        st.dispose();
+                        SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PENDING' WHERE status='PROGRESS");
+                        
+                        
+                        st2.step();
+                        st2.dispose();
+
+                    }
+                    
+
+
+                    
+
+                } catch (SQLiteException ex) {
+                    Logger.getLogger(SQLiteDBManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return null;
+            }
+        }).complete();
+        
+        
+    }
+
+    
+    
 
     public MessageObj getPendingMessage() {
      

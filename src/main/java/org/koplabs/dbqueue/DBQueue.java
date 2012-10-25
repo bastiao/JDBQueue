@@ -68,6 +68,12 @@ public class DBQueue
         return db.getPendingMessage();
     }
     
+    
+    public void putEverythingPending() 
+    {
+       db.putEverythingPending();
+    }
+    
     /**
      * Poll a message
      * @return returns a message. if no message in the queue null is returned
