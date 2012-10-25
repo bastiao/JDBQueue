@@ -69,7 +69,15 @@ public class JDBWorker extends Thread
             }
             catch (Exception e)
             {
-                
+            }
+            
+            while (queue.sizeProgress()>=numberOfMessages)
+            {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(JDBWorker.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         
