@@ -74,6 +74,7 @@ public class DBQueue
        db.putEverythingPending();
     }
     
+    
     /**
      * Poll a message
      * @return returns a message. if no message in the queue null is returned
@@ -94,7 +95,7 @@ public class DBQueue
     public MessageObj take() 
     {
         MessageObj r = null;
-        while((r=db.getPendingMessage())==null)
+        while((r=db.getPendingMessage())==null|| r.getMsg().equals("pass"))
         {
             synchronized(monitorWaitingForNew)
             {
@@ -106,6 +107,7 @@ public class DBQueue
             }
             
         }
+        
         return r;
     }
     
@@ -120,6 +122,18 @@ public class DBQueue
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    
+    
+    /**
+     * Completes a task.
+     * @param id 
+     */
+    public void putPendingtask(String id)
+    {
+        db.pendingTask(id);
+        add("pass");
+    }
+    
 
     /**
      * Completes a task.
