@@ -210,13 +210,29 @@ public class SQLiteDBManager implements IDBManager
                 String id = "";
 
                 try {
-                   
-                    SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PENDING' WHERE status='PROGRESS");
+                    SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
+                            + "WHERE status = 'PROGRESS'");
+                    st.step();
+                    while (st.hasRow())
+                    {
+                        
+                        
+                        id = st.columnString(0);
+                        result.add(st.columnString(2));
+                        
+                        System.out.println(id);
+                        SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET "
+                                + "status='PENDING' WHERE IDService=?");
 
+                        st2.bind(1, id);
+                        st2.step();
+                        
+                        st2.dispose();
+                        st.step();
+                        
 
-                    st2.step();
-                    st2.dispose();
-
+                    }
+                    
                 } catch (SQLiteException ex) {
                     Logger.getLogger(SQLiteDBManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -306,6 +322,35 @@ public class SQLiteDBManager implements IDBManager
         }).complete();
         
         return result;
+        
+    }
+
+    public void pendingTask(final String id) 
+    {
+        
+        queue.execute(new SQLiteJob<Object>() 
+        {
+
+            protected Object job(SQLiteConnection db) throws SQLiteException
+            {
+                try 
+                {
+                    SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET "
+                            + "status='PENDING' WHERE IDService=?");
+
+                    st2.bind(1, id);
+                    st2.step();
+
+                    st2.dispose();
+                }
+                catch (SQLiteException ex) {
+                    Logger.getLogger(SQLiteDBManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return null;
+            }
+                
+        });
+        
         
     }
     
