@@ -73,10 +73,10 @@ public class WorkerTest {
         DBQueue q = new DBQueue("queue.db");
         
         
-        JDBWorker worker = new JDBWorker(q,new TestTask(q), 2);
+        JDBWorker worker = new JDBWorker(q,new TestTask(q), 500);
         worker.start();
         
-        for (int i = 0 ; i<1000 ; i++)
+        for (int i = 0 ; i<10 ; i++)
         {
             q.add("je1");
             q.add("je2");
@@ -88,7 +88,18 @@ public class WorkerTest {
             q.add("je5");
             
         }
-        
+        while(q.size()>0)
+        {
+             System.out.println("Size: " + q.size());
+            System.out.println("Size of pending " + q.sizePending());
+            System.out.println("Size of progress " +q.sizeProgress());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(WorkerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        System.out.println("Closing? " + q.size());
         worker.close();
         try {
             worker.join();
