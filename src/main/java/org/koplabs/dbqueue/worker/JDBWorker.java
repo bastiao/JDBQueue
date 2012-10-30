@@ -60,12 +60,17 @@ public class JDBWorker extends Thread
         
         queue.putEverythingPending();
         
+        System.out.println("Size: " + queue.size());
+        System.out.println("Size of pending " + queue.sizePending());
+        System.out.println("Size of progress " +queue.sizeProgress());
+        int nretries = 0;
         while(!askToDie)
         {
             MessageObj msg = null;
             
             msg = this.queue.take();
-            
+            if (msg.equals("stop"))
+                break;
             try
             {
                 this.handler.handlerMessage(msg);
@@ -73,15 +78,20 @@ public class JDBWorker extends Thread
             catch (Exception e)
             {
             }
-            
-            if (queue.sizeProgress()>=numberOfMessages)
+            while (queue.sizeProgress()>=numberOfMessages)
             {
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(JDBWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                nretries++;
+                if (nretries>100)
+                    break;
+                
             }
+            
+            
         }
         
     }
@@ -89,6 +99,7 @@ public class JDBWorker extends Thread
     public void close()
     {
         this.askToDie = true;
+        this.queue.add("stop");
     }
 
     public void update(Observable o, Object o1) {
