@@ -18,6 +18,9 @@
 
 package org.koplabs.dbqueue;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.*;
@@ -65,8 +68,55 @@ public class WorkerTest {
     
     }
     
+    @Test
+    public void workerTestQueue()
+    {
+        long startTime = System.currentTimeMillis();
+        Queue q = new ConcurrentLinkedQueue();
+        
+        
+        for (int i = 0 ; i<100 ; i++)
+        {
+            q.add("je1");
+            q.add("je2");
+            q.add("je3");
+            q.add("je4");
+            q.add("je5");
+            
+        }
+        
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        System.out.println("Duration: " + duration + " ms");
+    }
+    
+    
     
     @Test
+    public void workerTestDBQueue()
+    {
+        long startTime = System.currentTimeMillis();
+        DBQueue q = new DBQueue("queue.db");
+        
+        
+        for (int i = 0 ; i<100 ; i++)
+        {
+            q.add("je1");
+            q.add("je2");
+            q.add("je3");
+            q.add("je4");
+            q.add("je5");
+            
+        }
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        System.out.println("Duration: " + duration + " ms");
+
+    }
+    
+    
+    
+    //@Test
     public void workerTest()
     {
     
