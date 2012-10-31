@@ -220,7 +220,7 @@ public class SQLiteDBManager implements IDBManager
                         id = st.columnString(0);
                         result.add(st.columnString(2));
                         
-                        System.out.println(id);
+                        
                         SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET "
                                 + "status='PENDING' WHERE IDService=?");
 

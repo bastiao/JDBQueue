@@ -19,7 +19,10 @@
 package org.koplabs.dbqueue;
 
 import java.util.List;
-import java.util.Observable;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +38,9 @@ public class DBQueue
     private IDBManager db = null;
     private String fileName = "queue.db";
     private Object monitorWaitingForNew = new Object();
+    
+    static final int CACHE_SIZE = 1000;
+    private ArrayBlockingQueue<MessageObj> cache = new ArrayBlockingQueue<MessageObj> (CACHE_SIZE);
     
     public DBQueue(String fileName)
     {
@@ -95,15 +101,24 @@ public class DBQueue
     public MessageObj take() 
     {
         MessageObj r = null;
-        while((r=db.getPendingMessage())==null|| r.getMsg().equals("pass"))
+        while(true)
         {
-            synchronized(monitorWaitingForNew)
+            r=db.getPendingMessage();
+            
+            if (r==null)
             {
-                try {
-                    monitorWaitingForNew.wait();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(DBQueue.class.getName()).log(Level.SEVERE, null, ex);
+                synchronized(monitorWaitingForNew)
+                {
+                    try {
+                        monitorWaitingForNew.wait();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(DBQueue.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+            }
+            else
+            {
+                break;
             }
             
         }
@@ -131,7 +146,10 @@ public class DBQueue
     public void putPendingtask(String id)
     {
         db.pendingTask(id);
-        add("pass");
+        synchronized(monitorWaitingForNew)
+        {
+            monitorWaitingForNew.notifyAll();
+        }
     }
     
 
@@ -175,7 +193,4 @@ public class DBQueue
         throw new UnsupportedOperationException("Not supported yet.");
     }
    
-    
-    
-    
 }
