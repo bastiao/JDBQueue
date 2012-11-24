@@ -39,8 +39,16 @@ public class JDBWorker extends Thread
     private boolean askToDie = false;
     private ITask handler = null;
     private int numberOfMessages = Integer.MAX_VALUE;
+    private ITake take = null;
     
     public JDBWorker(DBQueue queue, ITask handler)
+    {
+        this.handler = handler;
+        this.queue = queue;
+        this.take = new Take(queue);
+    }
+    
+    public JDBWorker(DBQueue queue, ITask handler, ITake take)
     {
         this.handler = handler;
         this.queue = queue;
@@ -57,7 +65,8 @@ public class JDBWorker extends Thread
     @Override
     public void run()
     {
-        
+     
+        MessageObj old = null;
         queue.putEverythingPending();
         try {
             Thread.sleep(5000);
@@ -71,14 +80,16 @@ public class JDBWorker extends Thread
         int nretries = 0;
         while(!askToDie)
         {
+            nretries = 0;
             MessageObj msg = null;
             
-            msg = this.queue.take();
+            msg = this.take.take();
             if (msg.equals("stop"))
                 break;
             try
             {
                 this.handler.handlerMessage(msg);
+                
             }
             catch (Exception e)
             {
@@ -86,7 +97,7 @@ public class JDBWorker extends Thread
             while (queue.sizeProgress()>numberOfMessages)
             {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(JDBWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }

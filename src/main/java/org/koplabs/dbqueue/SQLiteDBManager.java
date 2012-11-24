@@ -243,7 +243,47 @@ public class SQLiteDBManager implements IDBManager
         
     }
 
-    
+
+    public MessageObj getPendingMessageContains(final String s) {
+     
+        MessageObj result = queue.execute(new SQLiteJob<MessageObj >() 
+        {
+
+            protected MessageObj  job(SQLiteConnection db) throws SQLiteException {
+                List<String> result = new ArrayList<String>();
+                String id = "";
+
+                try 
+                {
+                    SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
+                            + "WHERE status = 'PENDING' AND message LIKE '%?%' LIMIT 1");
+                    st.bind(1, s);
+                    st.step();
+                    if (st.hasRow())
+                    {
+                        id = st.columnString(0);
+                        result.add(st.columnString(2));
+                        st.dispose();
+                    }
+                    
+                    SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PROGRESS' WHERE IDService=?");
+
+                    st2.bind(1, id);
+                    st2.step();
+                    st2.dispose();
+
+                } catch (SQLiteException ex) {
+                    Logger.getLogger(SQLiteDBManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                MessageObj msg = new MessageObj();
+                msg.setId(id);
+                msg.setMsg(result.get(0));
+                return msg;
+            }
+        }).complete();
+        
+        return result;
+    }
     
 
     public MessageObj getPendingMessage() {
@@ -333,6 +373,69 @@ public class SQLiteDBManager implements IDBManager
 
             protected Object job(SQLiteConnection db) throws SQLiteException
             {
+                try {
+                    SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
+                            + "WHERE IDService = ?");
+                    st.bind(1, id);
+                    st.step();
+                    String id = "";
+                    String msg = "";
+                    if (st.hasRow())
+                    {
+                        id = st.columnString(0);
+                        msg = st.columnString(2);
+                        st.dispose();
+                    }
+                    
+                    
+                    SQLiteStatement st2 = db.prepare("DELETE FROM ServicePool WHERE IDService=?");
+                    try 
+                    {
+                        st2.bind(1, id);
+                        st2.step();
+                    } 
+
+                    finally 
+                    {
+                        st.dispose();
+                    }
+                    
+                     SQLiteStatement st3 = db.prepare("INSERT INTO ServicePool"
+                            + " (status, message) VALUES (?, ?)");
+                    try
+                    {
+                        
+                        st3.bind(1, "PENDING");
+                        st3.bind(2, msg);
+                        st3.step();
+                        
+                    } finally {
+                        st.dispose();
+                    }
+   
+                } catch (SQLiteException ex) {
+                    ex.printStackTrace();
+                }
+                    
+
+                    
+
+                return null;
+            }
+                
+        });
+        
+        
+    }
+    
+    public void pendingTaskv2(final String id) 
+    {
+        
+        queue.execute(new SQLiteJob<Object>() 
+        {
+
+            protected Object job(SQLiteConnection db) throws SQLiteException
+            {
                 try 
                 {
                     SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET "
@@ -353,6 +456,5 @@ public class SQLiteDBManager implements IDBManager
         
         
     }
-    
     
 }

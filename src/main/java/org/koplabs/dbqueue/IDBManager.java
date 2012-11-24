@@ -31,5 +31,6 @@ public interface IDBManager
     public void pendingTask(final String id);
     public String addMessage(String message);
     public int size(final String status);
+    public MessageObj getPendingMessageContains(String s);
 }
     

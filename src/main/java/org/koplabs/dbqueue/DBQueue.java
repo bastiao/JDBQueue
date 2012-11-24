@@ -129,11 +129,44 @@ public class DBQueue
     
     
     
+    
+    /**
+     * Blocking poll message from the queue. 
+     * @return returns the message. If the queue does not have message, it blocks
+     * waiting for new messages.
+     */
+    public MessageObj take(String s) 
+    {
+        MessageObj r = null;
+        while(true)
+        {
+            r=db.getPendingMessageContains(s);
+            
+            if (r==null)
+            {
+                synchronized(monitorWaitingForNew)
+                {
+                    try {
+                        monitorWaitingForNew.wait();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(DBQueue.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+            
+        }
+        
+        return r;
+    }
+    
 
     
     public List<MessageObj> getAllProgressTask()
     {
-    
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
