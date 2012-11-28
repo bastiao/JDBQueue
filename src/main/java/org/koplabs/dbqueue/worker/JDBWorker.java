@@ -61,6 +61,13 @@ public class JDBWorker extends Thread
         this.numberOfMessages = numberOfMessages;
     }
     
+    public JDBWorker(DBQueue queue, ITask handler, int numberOfMessages,ITake take)
+    {
+        this(queue, handler);
+        this.numberOfMessages = numberOfMessages;
+        this.take = take;
+        
+    }
     
     @Override
     public void run()

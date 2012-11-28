@@ -164,6 +164,19 @@ public class DBQueue
     }
     
 
+    /**
+     * Blocking poll message from the queue. 
+     * @return returns the message. If the queue does not have message, it blocks
+     * waiting for new messages.
+     */
+    public MessageObj takeUnblock(String s) 
+    {
+        MessageObj r = null;
+        r=db.getPendingMessageContains(s);
+        return r;
+    }
+    
+
     
     public List<MessageObj> getAllProgressTask()
     {

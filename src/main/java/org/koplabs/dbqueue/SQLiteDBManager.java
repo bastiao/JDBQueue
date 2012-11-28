@@ -256,21 +256,28 @@ public class SQLiteDBManager implements IDBManager
                 try 
                 {
                     SQLiteStatement st = db.prepare("SELECT * FROM ServicePool "
-                            + "WHERE status = 'PENDING' AND message LIKE '%?%' LIMIT 1");
-                    st.bind(1, s);
+                            + "WHERE status = 'PENDING' AND message LIKE '%"+ s + "%' LIMIT 1");
+                    //st.bind(1, s);
                     st.step();
+                    
                     if (st.hasRow())
                     {
+                        
                         id = st.columnString(0);
                         result.add(st.columnString(2));
                         st.dispose();
+                        SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PROGRESS' WHERE IDService=?");
+
+                        st2.bind(1, id);
+                        st2.step();
+                        st2.dispose();
+                    }
+                    else
+                    {
+                        return null;
                     }
                     
-                    SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PROGRESS' WHERE IDService=?");
-
-                    st2.bind(1, id);
-                    st2.step();
-                    st2.dispose();
+                    
 
                 } catch (SQLiteException ex) {
                     Logger.getLogger(SQLiteDBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -304,14 +311,21 @@ public class SQLiteDBManager implements IDBManager
                         id = st.columnString(0);
                         result.add(st.columnString(2));
                         st.dispose();
+                        
+
+                        SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PROGRESS' WHERE IDService=?");
+
+                        st2.bind(1, id);
+                        st2.step();
+                        st2.dispose();
+
+                        
+                    }
+                    else
+                    {
+                        return null;
                     }
                     
-                    SQLiteStatement st2 = db.prepare("UPDATE ServicePool SET status='PROGRESS' WHERE IDService=?");
-
-                    st2.bind(1, id);
-                    st2.step();
-                    st2.dispose();
-
                     
 
                 } catch (SQLiteException ex) {
