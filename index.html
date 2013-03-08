@@ -89,12 +89,10 @@ worker.join();
     }
 
 }
-</code></pre>
+public void workerTest()
+{
 
-<p>public void workerTest()
-    {</p>
-
-<pre><code>    DBQueue q = new DBQueue("queue.db");
+    DBQueue q = new DBQueue("queue.db");
 
 
     JDBWorker worker = new JDBWorker(q,new TestTask(q), 500);
@@ -133,6 +131,8 @@ worker.join();
 
 }
 </code></pre>
+
+<p>}</p>
 
 <h1>Dependence</h1>
 
