@@ -55,7 +55,7 @@ DBQueue (persistence queue). </p>
 
 <p><img src="http://luisbastiao.files.wordpress.com/2012/09/arch.png" alt="http://luisbastiao.files.wordpress.com/2012/09/arch.png"></p>
 
-<h1>Example</h1>
+<h1>Example 1</h1>
 
 <p>In order to handle the message an implementation of ITask should be provided.
 Moreover, to poll the messages automatically, a JDBWorker need to be created.</p>
@@ -70,6 +70,70 @@ q.poll();
 q.take();
 
 worker.join();
+</code></pre>
+
+<h1>Example 2 #</h1>
+
+<pre><code>class TestTask implements ITask
+{
+    private DBQueue queue; 
+    public TestTask(DBQueue queue )
+    {
+        this.queue = queue;
+    }
+    public void handlerMessage(MessageObj message) {
+
+        System.out.println(message);
+        queue.completedTask(message.getId());
+
+    }
+
+}
+</code></pre>
+
+<p>(...)</p>
+
+<p>public void workerTest()
+    {</p>
+
+<pre><code>    DBQueue q = new DBQueue("queue.db");
+
+
+    JDBWorker worker = new JDBWorker(q,new TestTask(q), 500);
+    worker.start();
+
+    for (int i = 0 ; i&lt;10 ; i++)
+    {
+        q.add("je1");
+        q.add("je2");
+        q.add("je3");
+        System.out.println("Size: " + q.size());
+        System.out.println("Size of pending " + q.sizePending());
+        System.out.println("Size of progress " +q.sizeProgress());
+        q.add("je4");
+        q.add("je5");
+
+    }
+    while(q.size()&gt;0)
+    {
+         System.out.println("Size: " + q.size());
+        System.out.println("Size of pending " + q.sizePending());
+        System.out.println("Size of progress " +q.sizeProgress());
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(WorkerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    System.out.println("Closing? " + q.size());
+    worker.close();
+    try {
+        worker.join();
+    } catch (InterruptedException ex) {
+        Logger.getLogger(WorkerTest.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+}
 </code></pre>
 
 <h1>Dependence</h1>
