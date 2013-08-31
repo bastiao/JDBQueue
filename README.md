@@ -38,6 +38,11 @@ In order to grant the persistence, JDBQueue uses sqlite4java.
 
 This work is still working in progress and used by a project. Generalization might be necessary to other cases. Feel free to contribute back to it.
 
+
+# Website #
+
+http://bastiao.github.io/JDBQueue/
+
 # Author #
 
 
